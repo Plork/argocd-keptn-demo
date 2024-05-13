@@ -1,0 +1,29 @@
+replicaCount: 1
+
+commitID: ""
+environment: "production"
+
+image:
+  repository: mbezemer/techmarket-k8s-node-app
+  tag: 0.0.1
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: false
+  annotations: {}
+  path: /
+  hosts:
+    - chart-example.localdev.me
+  tls: []
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi

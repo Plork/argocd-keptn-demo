@@ -1,0 +1,10 @@
+{{ if .Capabilities.APIVersions.Has "lifecycle.keptn.sh/v1" -}}
+apiVersion: lifecycle.keptn.sh/v1
+kind: KeptnAppContext
+metadata:
+  name: {{ template "node-app.fullname" . }}
+spec:
+  metadata:
+    commit-id: {{ .Values.commitID }}
+    environment: {{ .Values.environment }}
+{{end}}

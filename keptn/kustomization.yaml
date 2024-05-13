@@ -5,5 +5,5 @@ metadata:
 namespace: keptn-system
 
 resources:
-  - ./config.yaml
-  - ./jaeger.yaml
+  - resources/config.yaml
+  - resources/jaeger.yaml

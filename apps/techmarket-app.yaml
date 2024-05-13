@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: techmarket-app
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/Plork/argocd-keptn-demo
+        revision: main
+        files:
+          - path: techmarket-app/**/config.json
+  template:
+    metadata:
+      name: techmarket-app-{{environment}}
+      annotations:
+        argocd.argoproj.io/sync-wave: "4"
+    spec:
+      destination:
+        name: in-cluster
+        namespace: techmarket-{{environment}}
+      source:
+        path: techmarket-app/chart
+        repoURL: https://github.com/Plork/argocd-keptn-demo.git
+        targetRevision: main
+        helm:
+          releaseName: techmarket-app
+          ignoreMissingValueFiles: true
+          valueFiles:
+            - techmarket-app/{{environment}}/values.yaml
+          values: |
+            version: {{version}}
+      project: default
+      syncPolicy:
+        managedNamespaceMetadata:
+          annotations:
+            keptn.sh/lifecycle-toolkit: enabled
+        syncOptions:
+          - CreateNamespace=true
+        automated:
+          prune: true
+          selfHeal: true

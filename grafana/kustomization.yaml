@@ -4,8 +4,18 @@ metadata:
   name: grafana
 namespace: monitoring
 
+generatorOptions:
+  labels:
+    grafana_dashboard: "1"
+
+configMapGenerator:
+  - name: grafana-dashboards
+    files:
+      - dashboards/keptn-overview.json
+      - dashboards/keptn-applications.json
+      - dashboards/keptn-workloads.json
+    options:
+      disableNameSuffixHash: true
+
 resources:
-  - grafana-dashboard-keptn-applications.yaml
-  - grafana-dashboard-keptn-overview.yaml
-  - grafana-dashboard-keptn-workloads.yaml
-  - ./datasources.yaml
+  - resources/datasources.yaml

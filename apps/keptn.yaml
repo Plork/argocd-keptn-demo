@@ -14,7 +14,7 @@ spec:
   sources:
     - repoURL: "https://charts.lifecycle.keptn.sh"
       chart: keptn
-      targetRevision: 0.5.2
+      targetRevision: 0.6.0
       helm:
         parameters:
           - name: "commitID"

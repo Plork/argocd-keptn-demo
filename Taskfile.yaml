@@ -8,7 +8,7 @@ tasks:
   create-kind-cluster:
     desc: Create kind cluster
     cmds:
-      - kind create cluster --config kind-cluster.yaml
+      - kind create cluster --config kind.yaml
     silent: true
 
   delete-kind-cluster:

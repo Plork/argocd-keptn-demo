@@ -4,10 +4,10 @@ metadata:
   name: argocd
 namespace: argocd
 resources:
-  - ./namespace.yaml
+  - resources/namespace.yaml
   - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 patches:
-  - path: ./service.yaml
-  - path: ./argocd-cm.yaml
-  - path: ./argocd-secret.yaml
+  - path: patches/service.yaml
+  - path: patches/configmap.yaml
+  - path: patches/secret.yaml
