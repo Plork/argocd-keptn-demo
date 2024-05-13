@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keptn
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  destination:
+    name: in-cluster
+    namespace: keptn-system
+  project: default
+  sources:
+    - repoURL: "https://charts.lifecycle.keptn.sh"
+      chart: keptn
+      targetRevision: 0.5.2
+      helm:
+        parameters:
+          - name: "commitID"
+            value: "$ARGOCD_APP_REVISION"
+        values: |
+          lifecycleOperator:
+            lifecycleOperatorMetricsService:
+              ports:
+                - name: metrics
+                  port: 2222
+                  protocol: TCP
+                  targetPort: metrics
+                  nodePort: 31444
+              type: NodePort
+    - path: keptn
+      repoURL: https://github.com/Plork/argocd-keptn-demo.git
+      targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

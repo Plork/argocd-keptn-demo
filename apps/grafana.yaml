@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  destination:
+    name: in-cluster
+    namespace: monitoring
+  source:
+    path: grafana/
+    repoURL: https://github.com/Plork/argocd-keptn-demo.git
+    targetRevision: main
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

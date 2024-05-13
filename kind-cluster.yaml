@@ -1,0 +1,15 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: argocd-keptn
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker
+  - role: worker
+    extraPortMappings:
+      - containerPort: 31443 # NodePort for Argo CD `argocd-server` service (dashboard).
+        hostPort: 8080 # Port on host running the kind cluster.
+      - containerPort: 31444 # NodePort for Keptn `lifecycle-operator-metrics-service` service (metrics).
+        hostPort: 8081
+      - containerPort: 31445 # NodePort for Grafana `observability-stack-grafana` service (dashboards).
+        hostPort: 8082

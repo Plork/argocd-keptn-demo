@@ -1,0 +1,55 @@
+# https://taskfile.dev
+
+version: "3"
+
+dotenv: [".env"]
+
+tasks:
+  create-kind-cluster:
+    desc: Create kind cluster
+    cmds:
+      - kind create cluster --config kind-cluster.yaml
+    silent: true
+
+  delete-kind-cluster:
+    desc: Delete kind cluster
+    cmds:
+      - kind delete cluster --name argocd-keptn
+    silent: true
+
+  install-argo:
+    desc: Install Argo CD
+    cmds:
+      - task: create-kind-cluster
+      - kubectl apply -k argocd
+    internal: true
+    silent: true
+
+  wait-argo:
+    desc: Wait for Argo CD to be ready
+    cmds:
+      - task: install-argo
+      - kubectl wait --for=condition=available deployment/argocd-server -n argocd --timeout=300s
+    internal: true
+    silent: true
+
+  apply-argocd-apps:
+    desc: Apply Argo CD applications
+    cmds:
+      - task: wait-argo
+      - kubectl apply -f apps.yaml
+    internal: true
+    silent: true
+
+  install-keptn-demo:
+    desc: Install Keptn
+    cmds:
+      - task: apply-argocd-apps
+    silent: true
+
+  reinstall-keptn-demo:
+    desc: Reinstall-keptn-demo
+    cmds:
+      - task: delete-kind-cluster
+      - task: apply-argocd-apps
+    silent: true

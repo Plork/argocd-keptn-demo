@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jaeger
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  destination:
+    name: in-cluster
+    namespace: observability
+  source:
+    chart: jaeger-operator
+    repoURL: https://jaegertracing.github.io/helm-charts
+    targetRevision: 2.50.1
+    helm:
+      releaseName: jaeger-operator
+      values: |
+        rbac:
+          clusterRole: true
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
