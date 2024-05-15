@@ -2,6 +2,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: techmarket-app
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   generators:
     - git:
@@ -12,8 +14,6 @@ spec:
   template:
     metadata:
       name: techmarket-app-{{environment}}
-      annotations:
-        argocd.argoproj.io/sync-wave: "4"
     spec:
       destination:
         name: in-cluster
@@ -23,12 +23,18 @@ spec:
         repoURL: https://github.com/Plork/argocd-keptn-demo.git
         targetRevision: main
         helm:
-          releaseName: techmarket-app
           ignoreMissingValueFiles: true
           valueFiles:
             - techmarket-app/{{environment}}/values.yaml
           values: |
+            nameOverride: techmarket-app-{{environment}}
+
             version: {{version}}
+            commitID: $ARGOCD_APP_REVISION
+
+            ingress:
+              hosts:
+                - techmarket-{{environment}}.localdev.me
       project: default
       syncPolicy:
         managedNamespaceMetadata:

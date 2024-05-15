@@ -6,7 +6,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    app.kubernetes.io/part-of: {{ .Release.Name }}
+    app.kubernetes.io/part-of: {{ .Chart.Name }}
     app.kubernetes.io/name: {{ template "node-app.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     helm.sh/chart: {{ template "node-app.chart" . }}
