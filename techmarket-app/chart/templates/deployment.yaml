@@ -3,9 +3,10 @@ kind: Deployment
 metadata:
   name: {{ template "node-app.fullname" . }}
   labels:
+    keptn.sh/app: {{ .Chart.Name }}
+    keptn.sh/workload: {{ template "node-app.name" . }}
     app.kubernetes.io/part-of: {{ .Chart.Name }}
     app.kubernetes.io/name: {{ template "node-app.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
     helm.sh/chart: {{ template "node-app.chart" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -28,6 +29,8 @@ spec:
           env:
             - name: NODE_ENV
               value: {{ .Values.environment }}
+            - name: VERSION
+              value: {{ .Values.version }}
           ports:
             - name: http
               containerPort: 3000

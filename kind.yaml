@@ -9,8 +9,12 @@ nodes:
         nodeRegistration:
           kubeletExtraArgs:
             node-labels: "ingress-ready=true"
-  - role: worker
-  - role: worker
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 443
   - role: worker
     extraPortMappings:
       - containerPort: 31443 # NodePort for Argo CD `argocd-server` service (dashboard).
@@ -19,9 +23,5 @@ nodes:
         hostPort: 8081
       - containerPort: 31445 # NodePort for Grafana `observability-stack-grafana` service (dashboards).
         hostPort: 8082
-      - containerPort: 80
-        hostPort: 80
-        protocol: TCP
-      - containerPort: 443
-        hostPort: 443
-        protocol: TCP
+      - containerPort: 32746 # NodePort for Argo Workflows
+        hostPort: 8083

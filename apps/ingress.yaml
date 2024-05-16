@@ -16,10 +16,27 @@ spec:
     targetRevision: 4.10.0
     helm:
       releaseName: ingress-nginx
-        values: |
-          controller:
-            service:
-              type: LoadBalancer
+      values: |
+        controller:
+          hostPort:
+            enabled: true
+          terminationGracePeriodSeconds: 0
+          service:
+            type: "NodePort"
+          watchIngressWithoutClass: true
+          nodeSelector:
+            ingress-ready: "true"
+          tolerations:
+          - effect: "NoSchedule"
+            key: "node-role.kubernetes.io/master"
+            operator: "Equal"
+          - effect: "NoSchedule"
+            key: "node-role.kubernetes.io/control-plane"
+            operator: "Equal"
+          publishService:
+            enabled: false
+          extraArgs:
+            "enable-ssl-passthrough": ""
   project: default
   syncPolicy:
     syncOptions:

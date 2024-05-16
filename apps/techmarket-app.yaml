@@ -27,8 +27,9 @@ spec:
           valueFiles:
             - techmarket-app/{{environment}}/values.yaml
           values: |
-            nameOverride: techmarket-app-{{environment}}
+            nameOverride: techmarket-app
 
+            environment: {{environment}}
             version: {{version}}
             commitID: $ARGOCD_APP_REVISION
 

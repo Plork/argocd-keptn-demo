@@ -21,7 +21,7 @@ tasks:
     desc: Install Argo CD
     cmds:
       - task: create-kind-cluster
-      - kubectl apply -k argocd
+      - kubectl apply -k argo-cd
     internal: true
     silent: true
 

@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-workflows
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  destination:
+    namespace: argo-workflows
+    name: in-cluster
+  project: default
+  sources:
+    - chart: argo-workflows
+      repoURL: https://argoproj.github.io/argo-helm
+      targetRevision: 0.41.4
+      helm:
+        values: |
+          server:
+            serviceType: NodePort
+            serviceNodePort: 32746
+            ingress:
+              enabled: true
+              annotations:
+                kubernetes.io/ingress.class: nginx
+                nginx.ingress.kubernetes.io/rewrite-target: /
+              hosts:
+                - argo-workflows.localdev.me
+            authModes:
+              - sso
+            sso:
+              enabled: true
+              issuer: https://argocd.localdev.me/api/dex
+              # sessionExpiry defines how long your login is valid for in hours. (optional, default: 10h)
+              sessionExpiry: 240h
+              clientId:
+                name: argo-workflows-sso
+                key: client-id
+              clientSecret:
+                name: argo-workflows-sso
+                key: client-secret
+              redirectUrl: https://argo-workflows.localdev.me/oauth2/callback
+    - path: argo-workflows/
+      repoURL: https://github.com/Plork/argocd-keptn-demo.git
+      targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
