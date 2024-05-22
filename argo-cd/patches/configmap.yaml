@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: argocd-cm
 data:
+  accounts.workflows: apiKey, login
   kustomize.buildOptions: --enable-helm
   application.resourceTrackingMethod: annotation+label
   resource.customizations: |
